@@ -1,9 +1,15 @@
 from mmu import MMU
 
-class LruMMU(MMU):
+
+class ClockMMU(MMU):
     def __init__(self, frames):
-        # TODO: Constructor logic for LruMMU
-        pass
+        self.frameList = [-1] * frames
+        self.isModified = [-1] * frames
+        self.timeAdded = [-1] * frames
+        self.readCount = 0
+        self.writeCount = 0
+        self.faultCount = 0
+        self.clock = 0
 
     def set_debug(self):
         # TODO: Implement the method to set debug mode
@@ -14,21 +20,58 @@ class LruMMU(MMU):
         pass
 
     def read_memory(self, page_number):
-        # TODO: Implement the method to read memory
-        pass
+
+        if (page_number in self.frameList):
+            return
+
+        self.faultCount += 1
+        self.readCount += 1
+
+        if(-1 in self.frameList):
+            index = self.frameList.index(-1)
+        else:
+            minTime = min(self.timeAdded)
+            index = self.timeAdded.index(minTime)
+            
+        if(self.isModified[index] == 1):
+           self.writeCount  += 1
+
+        self.frameList[index] = page_number
+        self.isModified[index] = 0
+        self.timeAdded[index] = self.clock
+
+        self.clock += 1
 
     def write_memory(self, page_number):
-        # TODO: Implement the method to write memory
-        pass
+
+        if (page_number in self.frameList):
+            index = self.frameList.index(page_number)
+            self.isModified[index] = 1
+            return
+
+        self.faultCount += 1
+        self.readCount += 1
+
+        if(-1 in self.frameList):
+            index = self.frameList.index(-1)
+        else:
+            minTime = min(self.timeAdded)
+            index = self.timeAdded.index(minTime)
+            
+        if(self.isModified[index] == 1):
+           self.writeCount  += 1
+
+        self.frameList[index] = page_number
+        self.isModified[index] = 1
+        self.timeAdded[index] = self.clock
+
+        self.clock += 1
 
     def get_total_disk_reads(self):
-        # TODO: Implement the method to get total disk reads
-        return -1
+        return self.readCount
 
     def get_total_disk_writes(self):
-        # TODO: Implement the method to get total disk writes
-        return -1
+        return self.writeCount
 
     def get_total_page_faults(self):
-        # TODO: Implement the method to get total page faults
-        return -1
+        return self.faultCount
