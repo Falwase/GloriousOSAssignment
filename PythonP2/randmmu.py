@@ -3,13 +3,11 @@ from random import randint
 
 class RandMMU(MMU):
     def __init__(self, frames):
-        # TODO: Constructor logic for RandMMU
         self.frameList = [-1] * frames
         self.isModified = [-1] * frames
         self.readCount = 0
         self.writeCount = 0
         self.faultCount = 0
-        pass
 
     def set_debug(self):
         # TODO: Implement the method to set debug mode
@@ -60,13 +58,10 @@ class RandMMU(MMU):
         self.isModified[index] = 1
 
     def get_total_disk_reads(self):
-        # TODO: Implement the method to get total disk reads
         return self.readCount
 
     def get_total_disk_writes(self):
-        # TODO: Implement the method to get total disk writes
         return self.writeCount
 
     def get_total_page_faults(self):
-        # TODO: Implement the method to get total page faults
         return self.faultCount
