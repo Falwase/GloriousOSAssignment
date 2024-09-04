@@ -1,7 +1,7 @@
 from mmu import MMU
 
 
-class ClockMMU(MMU):
+class LruMMU(MMU):
     def __init__(self, frames):
         self.frameList = [-1] * frames
         self.isModified = [-1] * frames
@@ -20,8 +20,14 @@ class ClockMMU(MMU):
         pass
 
     def read_memory(self, page_number):
+        print(page_number)
+        print(self.frameList)
+        print(self.timeAdded)
 
         if (page_number in self.frameList):
+            index = self.frameList.index(page_number)
+            self.timeAdded[index] = self.clock
+            self.clock += 1
             return
 
         self.faultCount += 1
@@ -43,10 +49,15 @@ class ClockMMU(MMU):
         self.clock += 1
 
     def write_memory(self, page_number):
+        print(page_number)
+        print(self.frameList)
+        print(self.timeAdded)
 
         if (page_number in self.frameList):
             index = self.frameList.index(page_number)
             self.isModified[index] = 1
+            self.timeAdded[index] = self.clock
+            self.clock += 1
             return
 
         self.faultCount += 1
