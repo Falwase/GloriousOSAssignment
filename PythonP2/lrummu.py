@@ -20,9 +20,6 @@ class LruMMU(MMU):
         pass
 
     def read_memory(self, page_number):
-        print(page_number)
-        print(self.frameList)
-        print(self.timeAdded)
 
         if (page_number in self.frameList):
             index = self.frameList.index(page_number)
@@ -49,9 +46,6 @@ class LruMMU(MMU):
         self.clock += 1
 
     def write_memory(self, page_number):
-        print(page_number)
-        print(self.frameList)
-        print(self.timeAdded)
 
         if (page_number in self.frameList):
             index = self.frameList.index(page_number)
